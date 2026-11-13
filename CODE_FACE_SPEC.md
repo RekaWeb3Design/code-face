@@ -351,5 +351,8 @@ fonts keep OFL 1.1 and their licences are also served at `/licenses/`.
     landing (no scripts), `/app` and `/app/` with reloads, an 8,000-blob fit to Done, a tinted paper SVG and a
     tinted dark PNG poster, code download, opening that code file: no console errors, no CSP violations, no
     request to any other origin.
+  - Landing re-checked 2026-11-13 on the production build under `wrangler pages dev` (Chrome via Playwright):
+    no console errors, no CSP violations, no request to another origin; CLS 0; Lighthouse 100 / 100 / 100 / 100
+    (performance, accessibility, best practices, SEO) desktop and mobile; landing JS 8.1 KB gzipped.
 - No analytics, no cookies, no runtime requests to other origins.
 

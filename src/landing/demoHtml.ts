@@ -100,8 +100,9 @@ export function copyLinesHtml(lines: readonly string[], indices: readonly number
     .map((index) => {
       const line = lines[index]
       return (
-        `<li><button type="button" class="copy-line" data-blob="${index}" data-line="${line}" ` +
-        `aria-label="Copy the line of blob ${index + 1}: ${line}"><span class="ln">${blobNumber(index)}</span>` +
+        // The accessible name is the visible text with "Copy the line of blob" in front (label in name).
+        `<li><button type="button" class="copy-line" data-blob="${index}" data-line="${line}">` +
+        `<span class="sr-only">Copy the line of blob </span><span class="ln">${blobNumber(index)}</span> ` +
         `<code>${line}</code>${swatch(lineColour(line))}<span class="copied" aria-hidden="true">copied</span></button></li>`
       )
     })

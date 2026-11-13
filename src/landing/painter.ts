@@ -48,17 +48,26 @@ export function paintStage(meta: DemoStage, text: string, canvas: HTMLCanvasElem
     runInFrames(
       (function* () {
         try {
+          // Each step below is one slice of work; the runner checks its time budget between them.
           const picture = decodeBlobs(text)
+          yield
           const lines = blobLines(text)
           yield
           const [width, height] = pictureSize(picture.aspect, longSide)
           const rgba = yield* renderBlobsInSteps(picture, width, height)
+          const image = new ImageData(rgba, width, height)
+          yield
           canvas.width = width
           canvas.height = height
           const ctx = canvas.getContext('2d')
           if (!ctx) throw new Error('no 2D canvas')
-          ctx.putImageData(new ImageData(rgba, width, height), 0, 0)
-          const blobs = Array.from({length: picture.count}, (_, i) => readBlob(picture.params, i))
+          ctx.putImageData(image, 0, 0)
+          yield
+          const blobs: Blob[] = []
+          for (let i = 0; i < picture.count; i++) {
+            blobs.push(readBlob(picture.params, i))
+            if (i % 500 === 499) yield
+          }
           resolve({meta, picture, lines, blobs, canvas})
         } catch (error) {
           reject(error)

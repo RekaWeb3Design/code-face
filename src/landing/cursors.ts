@@ -9,7 +9,8 @@
 //
 // Rules: transform and opacity only; one requestAnimationFrame loop that stops when nothing moves;
 // native scrolling, never touched. Content is already in its place in the HTML: before a section is built
-// its parts are only shifted (transform) and faded, so the layout never moves.
+// its parts are only shifted and turned (transform), never faded, so the layout never moves and the text
+// always keeps its full contrast.
 
 const STAGGER_MS = 60
 const FLY_MS = 190
@@ -17,7 +18,6 @@ const DRAG_MS = 250
 const RETURN_MS = 320
 const FAST_SCROLL = 2.2 // px per ms: faster than this, a section is finished at once
 const PARKED_OPACITY = 0.38
-const START_OPACITY = 0.3 // a part's opacity before it is dragged in
 
 type Chip = {blob: number; colour: string}
 
@@ -144,7 +144,6 @@ export function initCursors(chips: readonly Chip[], count: number): void {
     section.parts = [...section.el.querySelectorAll<HTMLElement>('[data-build]')].map((el, k) => {
       const {dx, dy, rot} = offsetFor(k + sections.indexOf(section) * 7)
       el.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`
-      el.style.opacity = String(START_OPACITY)
       return {el, dx, dy, rot, ax: 0, ay: 0, start: 0, phase: 'waiting', t0: 0, cursor: null}
     })
   }
@@ -170,7 +169,7 @@ export function initCursors(chips: readonly Chip[], count: number): void {
   function finish(section: Section) {
     for (const part of section.parts) {
       part.el.style.transform = ''
-      part.el.style.opacity = ''
+      part.el.style.willChange = ''
       part.phase = 'done'
       if (part.cursor) release(part.cursor, true)
     }
@@ -180,16 +179,20 @@ export function initCursors(chips: readonly Chip[], count: number): void {
 
   function start(section: Section, now: number) {
     section.state = 'building'
-    // Measure every part where it really sits (without its offset), then put the offset back.
-    for (const part of section.parts) part.el.style.transform = 'none'
+    // Where each part really sits, without writing anything first: the offset turns the part about its
+    // centre and moves it by (dx, dy), so its box's centre minus (dx, dy) is the untransformed centre.
     const scrollY = window.scrollY
     for (const part of section.parts) {
       const r = part.el.getBoundingClientRect()
-      part.ax = r.left + Math.min(36, r.width / 3)
-      part.ay = r.top + scrollY + Math.min(18, r.height / 3)
+      const [w, h] = [part.el.offsetWidth, part.el.offsetHeight]
+      const left = r.left + r.width / 2 - part.dx - w / 2
+      const top = r.top + r.height / 2 - part.dy - h / 2
+      part.ax = left + Math.min(36, w / 3)
+      part.ay = top + scrollY + Math.min(18, h / 3)
     }
     section.parts.forEach((part, k) => {
-      part.el.style.transform = `translate(${part.dx}px, ${part.dy}px) rotate(${part.rot}deg)`
+      // Its own compositor layer while it moves, so moving it never repaints it.
+      part.el.style.willChange = 'transform'
       part.start = now + k * STAGGER_MS
       const cursor = cursors[k % cursors.length]
       cursor.queue.push(part)
@@ -261,10 +264,10 @@ export function initCursors(chips: readonly Chip[], count: number): void {
           const t = Math.min(1, (now - part.t0) / DRAG_MS)
           const k = 1 - ease(t)
           part.el.style.transform = t >= 1 ? '' : `translate(${part.dx * k}px, ${part.dy * k}px) rotate(${part.rot * k}deg)`
-          part.el.style.opacity = t >= 1 ? '' : String(START_OPACITY + (1 - START_OPACITY) * (1 - k))
           c.x = target.x + part.dx * k
           c.y = target.y + part.dy * k
           if (t >= 1) {
+            part.el.style.willChange = ''
             part.phase = 'done'
             part.cursor = null
             release(c, false)
@@ -319,4 +322,12 @@ export function initCursors(chips: readonly Chip[], count: number): void {
     {rootMargin: '0px 0px -30% 0px', threshold: 0},
   )
   for (const section of sections) if (section.state === 'idle') observer.observe(section.el)
+
+  // Keyboard focus never lands on a part that is still out of place: the section is finished at once.
+  document.addEventListener('focusin', (event) => {
+    const section = sections.find((s) => s.state !== 'built' && s.el.contains(event.target as Node))
+    if (!section) return
+    observer.unobserve(section.el)
+    finish(section)
+  })
 }
