@@ -1018,6 +1018,61 @@ h3 {
   margin: 0;
 }
 
+/* Back to top: fixed in the lower right corner. Without scripts it is always there; with scripts (.watch) it
+   shows only once the hero has scrolled out of view. Opacity and transform only; hidden means not focusable. */
+.to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.6rem 0.95rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgb(21 23 26 / 0.94);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+  color: var(--text);
+  font: 500 0.85rem/1 var(--sans);
+  text-decoration: none;
+}
+
+.to-top:hover {
+  border-color: var(--accent);
+}
+
+.to-top-arrow {
+  display: inline-block;
+  color: var(--accent);
+  transition: transform 160ms ease-out;
+}
+
+.to-top:hover .to-top-arrow,
+.to-top:focus-visible .to-top-arrow {
+  transform: translateY(-2px);
+}
+
+.to-top.watch {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    visibility 0s linear 200ms;
+}
+
+.to-top.watch.on {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    visibility 0s;
+}
+
 /* Medium screens: the panel stays inside the picture's column. */
 @media (max-width: 1180px) {
   .demo {
@@ -1092,6 +1147,23 @@ h3 {
   }
 }
 
+@media (max-width: 640px) {
+  .to-top {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  /* "top" only on phones; the accessible name stays "Back to top". */
+  .to-top-long {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 400px) {
   .counters {
     gap: 0.75rem;
@@ -1111,7 +1183,10 @@ h3 {
 
   .arrow,
   .frame canvas,
-  .lens {
+  .lens,
+  .to-top-arrow,
+  .to-top.watch,
+  .to-top.watch.on {
     transition: none;
   }
 }

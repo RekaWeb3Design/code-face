@@ -10,6 +10,16 @@ document.documentElement.classList.toggle('reduced', reduced)
 const hero = initHero(reduced)
 initSections(hero)
 
+// Back to top: shown once the hero has scrolled out of view (always shown without scripts).
+const toTop = document.querySelector<HTMLElement>('.to-top')
+const heroSection = document.querySelector<HTMLElement>('.hero')
+if (toTop && heroSection) {
+  toTop.classList.add('watch')
+  new IntersectionObserver(([entry]) => {
+    toTop.classList.toggle('on', !entry.isIntersecting && entry.boundingClientRect.top < 0)
+  }).observe(heroSection)
+}
+
 if (reduced) {
   // No cursors with reduced motion, so the hint does not promise them.
   const hint = document.querySelector('.hint-text')
