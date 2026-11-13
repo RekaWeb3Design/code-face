@@ -5,7 +5,7 @@
 //   2. an SVG poster, or a Code Face code file (code-face*.txt, stage-*.txt or any file that starts with
 //      "CODE FACE <version>") outside the landing's stage folder public/demo/;
 //   3. anything from test-images/ or .playwright-mcp/;
-//   4. the strings WhatsApp (any case) or GPS in any text file;
+//   4. the two banned strings in BANNED below (a messaging app's name, any case, and a location tag) in any text file;
 //   5. the contact e-mail address anywhere except the README "Made by" line and the landing footer;
 //   6. a committed JPEG, PNG or WebP that still carries EXIF (or XMP) metadata.
 // It also fails if public/ has untracked or modified files: they would be deployed without being committed.
