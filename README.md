@@ -55,6 +55,16 @@ npm run preview    # serve the production build
 
 Add `?dev` to the app's URL for developer tools (GPU self-test, readouts).
 
+## Deploy
+
+The site is deployed to Cloudflare Pages by direct upload (the project has no Git connection). The
+response headers, including the Content-Security-Policy, come from `public/_headers`.
+
+```sh
+npm run build
+npx wrangler pages deploy dist --project-name code-face --branch main
+```
+
 ## How it works
 
 - **Blobs**: each blob is a 2D Gaussian with 9 numbers: centre x, y; size along its two axes; angle;
