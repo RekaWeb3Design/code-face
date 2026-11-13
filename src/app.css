@@ -1,0 +1,1105 @@
+/* Fonts, bundled with the app (no CDN). Both under the SIL Open Font License 1.1:
+   JetBrains Mono (src/assets/fonts/JetBrainsMono-OFL.txt), Space Grotesk (SpaceGrotesk-OFL.txt). */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/space-grotesk-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/space-grotesk-latin-500-normal.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #0d0e10;
+  --text: #eceae4;
+  --muted: #9299a3;
+  --line: #23262b;
+  --line-strong: #2e3238;
+  --raised: #1b1e22;
+  --accent: #c8f560;
+  --on-accent: #0d0e10;
+  --error: #ff9b8f;
+  --mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --sans: 'Space Grotesk', system-ui, sans-serif;
+  --side: 20rem;
+  --below: 15rem; /* height of the explanations and code under a landscape picture */
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* The page itself never scrolls: header, stage and footer share the window. */
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+p {
+  margin: 0;
+}
+
+.message {
+  max-width: 34rem;
+  margin: 20vh auto 0;
+  padding: 0 1.5rem;
+  line-height: 1.5;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.accent-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* Shell */
+.shell {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  height: 100dvh;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.wordmark {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  white-space: nowrap;
+}
+
+/* The wordmark links to the landing page; it keeps looking like the wordmark. */
+.wordmark a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wordmark a:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.tagline {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.phases {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+.phases li {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.phases li.current {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Full-strength colour: dimming it would drop below 4.5:1. */
+.phase-number {
+  font-weight: 700;
+}
+
+.phase-file {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Stage: explanations | picture | code, equal side columns so the picture is centred.
+   Landscape picture, or not enough width: picture on top, explanations and code side by side below. */
+.stage {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+.stage.portrait {
+  grid-template-columns: var(--side) minmax(0, 1fr) var(--side);
+  grid-template-rows: minmax(0, 1fr);
+  grid-template-areas: 'explain centre code';
+}
+
+.stage.landscape {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, var(--below));
+  grid-template-areas:
+    'centre centre'
+    'explain code';
+}
+
+@media (max-width: 80rem) {
+  .stage.portrait:not(.idle) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, var(--below));
+    grid-template-areas:
+      'centre centre'
+      'explain code';
+  }
+}
+
+.explain {
+  grid-area: explain;
+  position: relative; /* keeps visually hidden text inside the clipped column */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.headline {
+  font-size: 1.625rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.support {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Timeline: step tag + short mono text; newest row raised with an accent tag, older rows muted. */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 6ch minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.3rem;
+  color: var(--muted);
+}
+
+.timeline .tag {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline li:first-child {
+  background: var(--raised);
+  color: var(--text);
+}
+
+.timeline li:first-child .tag {
+  color: var(--accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.centre {
+  grid-area: centre;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* The picture cell is a size container, so the frame can take the largest size with the picture's
+   aspect ratio that fits (and an overlay can sit exactly on the picture). */
+.picture {
+  flex: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  container-type: size;
+}
+
+.frame {
+  --ar: 1;
+  position: relative;
+  width: min(100cqw, calc(100cqh * var(--ar)));
+  height: min(100cqh, calc(100cqw / var(--ar)));
+}
+
+.frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.frame canvas.hidden {
+  display: none;
+}
+
+.drop {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: grid;
+  place-items: center;
+  width: min(100%, 30rem);
+  height: min(100%, 30rem);
+  padding: 2rem;
+  box-sizing: border-box;
+  border: 1px dashed var(--line-strong);
+  border-radius: 0.5rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.drop:hover,
+.drop:focus-within {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+/* A photo is loaded but not started: the line, the file, a thumbnail at the photo's own aspect ratio,
+   then Start and Another photo. The frame grows a little to give the thumbnail room. */
+.drop.loaded {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: min(100%, 34rem);
+  height: min(100%, 38rem);
+  padding: 1.75rem;
+  border-color: var(--line-strong);
+  color: var(--text);
+  cursor: default;
+}
+
+.drop-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.drop-text .muted {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+/* The thumbnail takes the height that is left; the image keeps its ratio inside it. */
+.thumb {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  min-height: 0;
+}
+
+.thumb img {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 0.25rem;
+}
+
+.drop-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.drop input,
+.button-like input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+/* Outlines over the picture, in the picture's own pixel units, clipped to the picture frame. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.overlay ellipse {
+  fill: none;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.grow-outlines ellipse {
+  stroke: var(--accent);
+}
+
+.grow-outlines {
+  animation: outline-fade 1s ease-out forwards;
+}
+
+@keyframes outline-fade {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.hovered-blob ellipse {
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+
+.hovered-blob text {
+  fill: #ffffff;
+  font-family: var(--mono);
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grow-outlines {
+    display: none;
+  }
+}
+
+/* Counters and the mistake chart under the picture */
+.counters {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: center;
+  gap: 2.5rem;
+  margin: 0;
+}
+
+.counters div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.counters dd {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.big {
+  font-family: var(--mono);
+  font-size: 2.5rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.of {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: 3.5rem;
+}
+
+.chart-axis {
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.chart-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* Code column */
+.code-column {
+  grid-area: code;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.code-panel {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  white-space: pre;
+}
+
+.code-panel p {
+  margin: 0;
+}
+
+.code-panel .accent-label {
+  margin-bottom: 0.5rem;
+}
+
+.code-intro {
+  width: 0;
+  min-width: 100%;
+  margin-bottom: 1rem !important;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+/* A character whose real value changed since the previous readback: lit in the accent until the next
+   readback. A still highlight, not an animation: animating hundreds of characters made the browser
+   composite every frame and slowed the fit down by about a third on an integrated GPU. */
+.flash {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash {
+    color: inherit;
+  }
+}
+
+/* The poster's options open from a primary button. */
+.primary-summary {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 0.35rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.primary-summary::-webkit-details-marker {
+  display: none;
+}
+
+.poster[open] .primary-summary {
+  margin-bottom: 0.4rem;
+}
+
+.downloads button.secondary {
+  width: 100%;
+}
+
+.code-legend {
+  color: var(--text);
+}
+
+/* Wraps to the width of the code lines instead of widening the panel. */
+.code-key {
+  width: 0;
+  min-width: 100%;
+  margin-bottom: 0.5rem !important;
+  white-space: normal;
+}
+
+.code-gutter {
+  color: var(--muted);
+}
+
+.code-lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.code-line {
+  color: var(--text);
+  border-radius: 0.2rem;
+  cursor: default;
+}
+
+.code-line.hovered,
+.code-line:focus-visible {
+  background: var(--raised);
+  outline: 1px solid var(--line-strong);
+}
+
+.code-swatch {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  vertical-align: -0.05em;
+  border-radius: 0.15em;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+.code-line.new .code-gutter {
+  color: var(--accent);
+}
+
+.stage.landscape .code-lines {
+  columns: 17rem;
+  column-gap: 2rem;
+  column-fill: auto;
+  height: calc(12 * 1.4em);
+}
+
+@media (max-width: 80rem) {
+  .stage.portrait:not(.idle) .code-lines {
+    columns: 17rem;
+    column-gap: 2rem;
+    column-fill: auto;
+    height: calc(12 * 1.4em);
+  }
+}
+
+.downloads {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Buttons and inputs */
+button,
+.button-like {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: 0.35rem;
+  font: inherit;
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+button:hover:not(:disabled),
+.button-like:hover,
+.button-like:focus-within {
+  border-color: var(--text);
+}
+
+button:focus-visible,
+.button-like:focus-within,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  color: var(--muted);
+  border-color: var(--line);
+  cursor: default;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+}
+
+button.primary:hover:not(:disabled) {
+  border-color: var(--text);
+}
+
+button.primary:disabled {
+  background: var(--raised);
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.button-like.quiet {
+  border-color: transparent;
+  color: var(--muted);
+}
+
+input[type='number'],
+select {
+  padding: 0.4rem 0.55rem;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: 0.3rem;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+input[type='number'] {
+  width: 6rem;
+}
+
+.error {
+  padding: 0.6rem 1.5rem;
+  color: var(--error);
+  font-size: 0.9rem;
+}
+
+.error button {
+  margin-left: 0.5rem;
+}
+
+.message a {
+  color: var(--accent);
+}
+
+/* Footer bar */
+/* Three areas: Open code file | the fit's actions, centred | settings. */
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.bar-file {
+  justify-self: start;
+}
+
+.bar-settings {
+  justify-self: end;
+}
+
+.cap-note {
+  max-width: 16rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+/* Not enough width for three areas in a row: actions on top, file and settings below. */
+@media (max-width: 64rem) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'actions actions'
+      'file settings';
+  }
+
+  .bar-actions {
+    grid-area: actions;
+    justify-self: center;
+  }
+
+  .bar-actions:empty {
+    display: none;
+  }
+
+  .bar-file {
+    grid-area: file;
+  }
+
+  .bar-settings {
+    grid-area: settings;
+  }
+}
+
+.bar-actions,
+.bar-settings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bar-settings {
+  gap: 1.25rem;
+}
+
+.bar-settings label,
+.growth-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.growth-time {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Code poster export */
+.poster {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.poster summary {
+  cursor: pointer;
+}
+
+.poster label,
+.devtools label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--muted);
+}
+
+.poster-intro,
+.poster-size,
+.poster-status {
+  color: var(--muted);
+}
+
+.poster-size {
+  font-family: var(--mono);
+}
+
+.poster-warning {
+  color: var(--accent);
+}
+
+.poster-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.poster-progress progress {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+/* Dev tools (only with ?dev) */
+.devtools {
+  position: fixed;
+  right: 1rem;
+  bottom: 5rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 22rem;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 0.75rem 1rem;
+  background: var(--raised);
+  border: 1px solid var(--line-strong);
+  border-radius: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.devtools summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.dev-readout {
+  color: var(--muted);
+}
+
+.selftest p {
+  margin-top: 0.6rem;
+  color: var(--muted);
+}
+
+.pass {
+  color: var(--accent) !important;
+}
+
+.fail {
+  color: var(--error) !important;
+}
+
+/* Phone: picture, then explanations; no code; the header and footer wrap. */
+@media (max-width: 720px) {
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .brand {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stage,
+  .stage.portrait,
+  .stage.landscape,
+  .stage.portrait:not(.idle) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 8.5rem);
+    grid-template-areas:
+      'centre'
+      'explain';
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .headline {
+    font-size: 1.3rem;
+  }
+
+  .big {
+    font-size: 1.6rem;
+  }
+
+  .counters {
+    gap: 1.25rem;
+  }
+
+  .code-column {
+    display: none;
+  }
+
+  .bar {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Short windows: the picture comes first, so the chart goes and the row below gets smaller. */
+@media (max-height: 860px) {
+  :root {
+    --below: 12rem;
+  }
+
+  .stage.landscape .chart,
+  .stage.portrait:not(.idle) .chart {
+    display: none;
+  }
+}
+
+@media (max-height: 860px) and (min-width: 80rem) {
+  /* Three columns leave the full height to the picture: keep the chart there. */
+  .stage.portrait:not(.idle) .chart {
+    display: flex;
+  }
+}
+
+@media (max-width: 720px) {
+  .chart {
+    display: none !important;
+  }
+}
+
+/* Phones (checked at 390 px): the header and footer stay compact so the picture keeps its room. */
+@media (max-width: 720px) {
+  .tagline {
+    font-size: 0.8rem;
+  }
+
+  .phases {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .phases li {
+    padding: 0.25rem 0.45rem;
+  }
+
+  .bar {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'actions'
+      'settings'
+      'file';
+    gap: 0.6rem;
+  }
+
+  .bar-file,
+  .bar-settings {
+    justify-self: start;
+  }
+
+  .bar-settings {
+    gap: 0.4rem 1rem;
+  }
+
+  .bar-settings input {
+    width: 4.5rem;
+  }
+
+  .cap-note {
+    flex-basis: 100%;
+    max-width: none;
+    order: 1;
+  }
+}
+
+/* Phones: the code itself stays hidden, but once there is something to save (paused, done or viewing a
+   code file) the downloads sit right under the picture. Opened poster options scroll inside. */
+@media (max-width: 720px) {
+  .stage:has(.downloads),
+  .stage.portrait:not(.idle):has(.downloads),
+  .stage.landscape:has(.downloads) {
+    grid-template-rows: minmax(0, 1fr) auto minmax(0, 6rem);
+    grid-template-areas:
+      'centre'
+      'code'
+      'explain';
+  }
+
+  .code-column:has(.downloads) {
+    display: flex;
+    max-height: 34dvh;
+    overflow-y: auto;
+  }
+
+  /* While the poster options are open they take the explanations' place. */
+  .stage:has(.poster[open]),
+  .stage.portrait:not(.idle):has(.poster[open]),
+  .stage.landscape:has(.poster[open]) {
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'centre'
+      'code';
+  }
+
+  .stage:has(.poster[open]) .explain,
+  .stage:has(.poster[open]) .counters {
+    display: none;
+  }
+
+  .code-column:has(.poster[open]) {
+    max-height: 42dvh;
+  }
+
+  /* The picture shrinks to make room; nothing of it may show through the panel. */
+  .stage:has(.downloads) .centre {
+    overflow: hidden;
+  }
+
+  .code-column:has(.downloads) .code-panel,
+  .downloads > .muted {
+    display: none;
+  }
+
+  .downloads {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .downloads .poster {
+    flex: 1 1 100%;
+  }
+}

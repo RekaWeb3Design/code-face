@@ -1,0 +1,21 @@
+node_modules/
+dist/
+test-images/
+*.local
+.vite/
+.playwright-mcp/
+# Never commit photos, fit outputs or browser-test artefacts (privacy). Images for the repo live only in
+# docs/ and public/ (re-included at the end); check every one shows no person before adding it.
+*.jpg
+*.jpeg
+*.heic
+*.heif
+*.webp
+*.png
+code-face-*.txt
+code-face-*.svg
+.wrangler/
+!docs/**/*.png
+!docs/**/*.jpg
+!public/**/*.png
+!public/**/*.jpg
