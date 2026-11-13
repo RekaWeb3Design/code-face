@@ -13,6 +13,11 @@
     <meta property="og:title" content="Code Face: your photo, re-painted from blobs" />
     <meta property="og:description" content="Re-paint a photo from thousands of soft colour blobs, fitted live on your own GPU in the browser, and keep it as a text file that is the picture. Nothing is uploaded." />
     <meta property="og:url" content="https://codeface.rekavig.com/" />
+    <meta property="og:image" content="https://codeface.rekavig.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Code Face landing page: a windowsill photo re-painted from 2,048 soft colour blobs, next to its code." />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="preload" href="/src/assets/fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/fonts/space-grotesk-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/fonts/jetbrains-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -56,11 +61,11 @@
             <dl class="counters">
               <div>
                 <dt>BLOBS · LIVE</dt>
-                <dd id="count-blobs">8,000</dd>
+                <dd id="count-blobs">2,048</dd>
               </div>
               <div>
                 <dt>MISTAKE</dt>
-                <dd id="count-mistake">0.05%</dd>
+                <dd id="count-mistake">2.57%</dd>
               </div>
               <div>
                 <dt>UPLOADED</dt>
@@ -71,24 +76,26 @@
 
           <div class="demo">
             <figure class="picture">
-              <div class="frame">
-                <canvas data-stage="0" aria-hidden="true"></canvas>
-                <canvas data-stage="1" aria-hidden="true"></canvas>
-                <canvas data-stage="2" aria-hidden="true"></canvas>
-                <canvas data-stage="3" aria-hidden="true"></canvas>
-                <canvas data-stage="4" aria-hidden="true"></canvas>
-                <svg class="outline" viewBox="0 0 1 0.666015625" preserveAspectRatio="none" aria-hidden="true" focusable="false"><ellipse class="ring" cx="0" cy="0" rx="0" ry="0" /></svg>
-                <span class="tag" aria-hidden="true"></span>
-              </div>
-              <aside class="panel" aria-label="The demo picture's code, a few lines of it">
-                <p class="panel-head"><span class="live-dot" aria-hidden="true"></span>LIVE · BLOB CODE<span class="panel-count">8,000 blobs</span></p>
-                <ol class="panel-lines">
+              <div class="frame-wrap">
+                <div class="frame">
+                  <canvas data-stage="0" aria-hidden="true"></canvas>
+                  <canvas data-stage="1" aria-hidden="true"></canvas>
+                  <canvas data-stage="2" aria-hidden="true"></canvas>
+                  <canvas data-stage="3" aria-hidden="true"></canvas>
+                  <canvas data-stage="4" aria-hidden="true"></canvas>
+                  <svg class="outline" viewBox="0 0 0.75 1" preserveAspectRatio="none" aria-hidden="true" focusable="false"><ellipse class="ring" cx="0" cy="0" rx="0" ry="0" /></svg>
+                  <span class="tag" aria-hidden="true"></span>
+                </div>
+                <aside class="panel" aria-label="The demo picture's code, a few lines of it">
+                  <p class="panel-head"><span class="live-dot" aria-hidden="true"></span>LIVE · BLOB CODE<span class="panel-count">2,048 blobs</span></p>
+                  <ol class="panel-lines">
 <!--demo:panel-->
-                </ol>
-              </aside>
+                  </ol>
+                </aside>
+              </div>
               <figcaption>
-                Demo: a landscape drawn by a script (no photo), re-painted by Code Face from 32 to 8,000 blobs. Each stage
-                is drawn here from its real code file.
+                Demo: a photo of a windowsill, re-painted by Code Face from 32 to 2,048 blobs (the finished painting has
+                8,000). Each stage is drawn here from its real code file.
               </figcaption>
             </figure>
           </div>
@@ -155,8 +162,8 @@
       <section id="poster" class="section" data-build-section aria-labelledby="poster-title">
         <div class="wrap poster-grid">
           <figure class="poster-figure" data-build>
-            <img class="poster-img" src="/poster/demo-poster-1200.webp" srcset="/poster/demo-poster-720.webp 720w, /poster/demo-poster-1200.webp 1200w" sizes="(max-width: 860px) 100vw, min(653px, 56vw)" width="1200" height="848" loading="lazy" decoding="async" alt="An A4 landscape poster on a dark background: thousands of tiny lines of code, coloured by the demo landscape, so the sun, the mountains and the lake show through the text." />
-            <img class="poster-detail" src="/poster/demo-poster-detail.webp" width="480" height="300" loading="lazy" decoding="async" alt="A detail of the same poster at print size: rows of hex code, each character tinted by the picture behind it." />
+            <img class="poster-img" src="/poster/demo-poster-1200.webp" srcset="/poster/demo-poster-720.webp 509w, /poster/demo-poster-1200.webp 848w" sizes="(max-width: 860px) 100vw, 440px" width="848" height="1200" loading="lazy" decoding="async" alt="An A4 portrait poster on a dark background: thousands of tiny lines of code, coloured by the demo photo, so the plants, the toy dinosaur and the statue show through the text." />
+            <img class="poster-detail" src="/poster/demo-poster-detail.webp" width="480" height="300" loading="lazy" decoding="async" alt="A detail of the same poster at print resolution: the white flower drawn by rows of hex code, each character tinted by the picture behind it." />
             <figcaption>The demo's 8,000 lines as an A4 poster, made with the app's own poster export; the inset is a detail at print resolution.</figcaption>
           </figure>
           <div class="poster-copy">

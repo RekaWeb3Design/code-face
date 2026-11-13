@@ -293,21 +293,23 @@ Public repository https://github.com/RekaWeb3Design/code-face, MIT licence ("Cop
 fonts keep OFL 1.1 and their licences are also served at `/licenses/`.
 - **Privacy rule for the repository**: no photo of a person, and nothing made from one (code file, poster, SVG,
   screenshot), ever goes into git. `test-images/` and `.playwright-mcp/` are gitignored, as are image files and
-  `code-face-*` outputs anywhere except `docs/` and `public/`. Every image for the repo comes from a landscape or
-  product photo. Audit on 2026-11-13: no image, screenshot, code file or photo-derived data in any of the first
+  `code-face-*` outputs anywhere except `docs/` and `public/`. Every image for the repo comes from a photo with no
+  person in it, stripped of all metadata (EXIF, location); the original photo is never committed. `npm run release-check`
+  (`scripts/release-check.mjs`) enforces this on the tracked tree before every release. Audit on 2026-11-13: no image, screenshot, code file or photo-derived data in any of the first
   40 commits.
 - **Two pages** (Vite multi-page build): `/` is the landing (`index.html`, static, its own CSS only: no app bundle
   and no WebGPU code), `/app/` is the app (`app/index.html`). `/app` redirects to `/app/` (Cloudflare does this
   itself; `vite.config.ts` does the same for the dev and preview servers). `404.html` is a static page, so Pages
-  answers unknown paths with a real 404 instead of the landing. The app's wordmark links to `/`. The landing is a
-  placeholder until the real one is built from a mockup.
+  answers unknown paths with a real 404 instead of the landing. The app's wordmark links to `/`.
 - **Landing renderer** (`src/landing/drawCode.ts`): draws a code file on a 2D canvas with the CPU reference's own
   `readBlob`, `blobWeight` and `resolveColor`, each blob visiting only its 3-sigma box. Vitest checks it gives the
   same bytes as `forward()`. 8,000 blobs at 512 px take about 180 ms (Intel UHD laptop, Chrome).
 - **Landing demo files**: real code files of one painting at 32, 128, 512, 2,048 and 8,000 blobs, to go in
   `public/demo/`. Made with `?dev&stages=32,128,512,2048,8000`, which saves the first N blobs just before the
   growth event that leaves N (the copy is queued before `grow()` writes the new blobs), and the final state when
-  done. Not made yet: there is no landscape or product photo yet (see `docs/landing-demo.md`).
+  done. Made 2026-11-13 from the owner's own photo of a windowsill (plants, a toy dinosaur, a small statue; no
+  person), which is not committed (see `docs/landing-demo.md`). The hero's loop ends on 2,048 blobs: at 8,000
+  (mistake 0.54%) the painting no longer looks painted.
 - **Error states** (one line each, with a way forward):
   - photo: not an image file; a HEIC file the browser cannot decode; any other undecodable image; a file over
     40 MB (`src/ui/photoErrors.ts`, tested);

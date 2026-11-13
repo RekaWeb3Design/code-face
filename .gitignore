@@ -20,3 +20,4 @@ code-face-*.svg
 !public/**/*.png
 !public/**/*.jpg
 !public/**/*.webp
+!docs/**/*.webp

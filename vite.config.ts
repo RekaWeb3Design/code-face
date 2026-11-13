@@ -20,11 +20,13 @@ const appWithoutSlash: Connect.NextHandleFunction = (request, response, next) =>
 // build time, so they are on the page before any script runs.
 const demoLines = (name: string) => blobLines(readFileSync(resolve(import.meta.dirname, 'public/demo', name), 'utf8'))
 // The line taken apart in "The code": a mid-sized, clearly coloured blob of the finished demo.
-const ANATOMY_BLOB = 1062 // "afdd 4469 88f 6d1 404 d9a07b ae", near the sun
+const ANATOMY_BLOB = 802 // "2f06 6c08 3f8 8d7 d99 add06b bc", a leaf
 function landingMarkers(): Record<string, string> {
   const final = demoLines('stage-08000.txt')
+  // The hero's panel starts on the loop's last stage (2,048 blobs; see src/landing/demo.ts).
+  const loopEnd = demoLines('stage-02048.txt')
   return {
-    panel: panelItems(final, 14),
+    panel: panelItems(loopEnd, 14),
     field: fieldText(final, 56, 7),
     chips: chipData(final, 12),
     anatomy: anatomyHtml(final, ANATOMY_BLOB),

@@ -367,23 +367,29 @@ h1 {
 /* The demo picture and its live code */
 
 .demo {
-  --panel-left: -40px;
+  --panel-left: -150px; /* from the picture's left edge */
   --panel-width: 320px;
   position: relative;
-  padding-bottom: 150px;
 }
 
+/* The demo photo is portrait (3:4): the picture keeps to the right of its column and is never taller than
+   the window leaves room for. */
 .picture {
-  margin: 0;
+  width: min(100%, 440px, calc((100svh - 190px) * 0.75));
+  margin: 0 0 0 auto;
+}
+
+.frame-wrap {
+  position: relative;
 }
 
 .frame {
   position: relative;
-  aspect-ratio: 512 / 341;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   border: 1px solid var(--line-strong);
   border-radius: 4px;
-  background: #4b3d59; /* the demo file's background colour */
+  background: #595440; /* the demo file's background colour (DEMO_BACKGROUND) */
   cursor: crosshair;
 }
 
@@ -464,14 +470,14 @@ h1 {
 }
 
 figcaption {
-  margin: 0.75rem 0 0 calc(var(--panel-left) + var(--panel-width) + 20px);
+  margin: 2.25rem 0 0;
   font-size: 0.8rem;
   color: var(--muted);
 }
 
 .panel {
   position: absolute;
-  bottom: 0;
+  bottom: -20px;
   left: var(--panel-left);
   z-index: 5;
   width: var(--panel-width);
@@ -640,7 +646,7 @@ h3 {
 
 .viz {
   position: relative;
-  aspect-ratio: 512 / 341;
+  aspect-ratio: 3 / 2; /* the card visual's box; the portrait thumbnails sit inside it */
   margin-bottom: 18px;
   overflow: hidden;
   border-radius: 4px;
@@ -649,9 +655,8 @@ h3 {
 
 .thumb {
   display: block;
-  width: 100%;
-  height: 100%;
-  background: #4b3d59;
+  aspect-ratio: 3 / 4;
+  background: #595440;
 }
 
 .viz-drop {
@@ -659,7 +664,13 @@ h3 {
   border: 1px dashed var(--line-strong);
 }
 
+.viz-drop {
+  display: flex;
+  justify-content: center;
+}
+
 .viz-drop .thumb {
+  height: 100%;
   border-radius: 2px;
 }
 
@@ -688,8 +699,7 @@ h3 {
 }
 
 .viz-stages .thumb {
-  height: auto;
-  aspect-ratio: 512 / 341;
+  width: 100%;
   border-radius: 2px;
 }
 
@@ -896,14 +906,15 @@ h3 {
 
 .poster-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(28px, 5vw, 72px);
   align-items: center;
 }
 
 .poster-figure {
   position: relative;
-  margin: 0;
+  width: min(100%, 440px);
+  margin: 0 auto;
 }
 
 .poster-img {
@@ -917,9 +928,9 @@ h3 {
 
 .poster-detail {
   position: absolute;
-  right: -16px;
-  bottom: 52px;
-  width: 42%;
+  right: -48px;
+  bottom: 96px;
+  width: 64%;
   height: auto;
   border: 1px solid var(--line-strong);
   border-radius: 4px;
@@ -931,7 +942,7 @@ h3 {
   margin: 0.75rem 0 0;
 }
 
-.poster-copy p {
+.poster-copy div p {
   margin: 0 0 1rem;
   color: var(--muted);
 }
@@ -1006,7 +1017,7 @@ h3 {
 /* Medium screens: the panel stays inside the picture's column. */
 @media (max-width: 1180px) {
   .demo {
-    --panel-left: 12px;
+    --panel-left: -24px;
   }
 }
 
@@ -1045,11 +1056,12 @@ h3 {
   }
 
   figcaption {
-    margin-left: 0;
+    margin: 0.75rem 0 0;
   }
 
   .panel {
     position: relative;
+    bottom: auto;
     left: auto;
     width: min(320px, calc(100% - 24px));
     margin: -28px 12px 0 auto;

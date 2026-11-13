@@ -1,6 +1,6 @@
 import {Q_MAX} from '../fitter/params'
 import {blobWeight} from '../reference/blend'
-import {DEMO_ASPECT, DEMO_STAGES} from './demo'
+import {DEMO_ASPECT, DEMO_STAGES, HERO_LAST} from './demo'
 import {blobNumber, lineColour} from './demoHtml'
 import {fetchText, paintStage, type PaintedStage} from './painter'
 import {decode} from './scramble'
@@ -9,10 +9,11 @@ import {decode} from './scramble'
 // panel and counters that follow the stage, and the small pointer interactions.
 
 const HOLD_MS = 1500 // each stage, before the next
-const HOLD_LAST_MS = 3800 // the finished picture, before the loop starts again
+const HOLD_LAST_MS = 3800 // the loop's last picture, before the loop starts again
 const FADE_MS = 450 // matches .frame canvas in landing.css
 const PANEL_LINES = 14
-const LAST = DEMO_STAGES.length - 1
+const LAST = HERO_LAST // the loop's last stage (see demo.ts)
+const LOOP = HERO_LAST + 1 // stages in the loop
 const [ASPECT_W, ASPECT_H] = DEMO_ASPECT
 const LONG = Math.max(ASPECT_W, ASPECT_H)
 // The picture in blob coordinates (fractions of the long side).
@@ -96,7 +97,7 @@ export function initHero(reduced: boolean): Hero {
   function advance() {
     timer = 0
     if (!running()) return
-    const next = (current + 1) % DEMO_STAGES.length
+    const next = (current + 1) % LOOP
     if (!painted[next]) return // onPainted() moves on once it is drawn
     show(next)
     plan()
@@ -104,15 +105,16 @@ export function initHero(reduced: boolean): Hero {
 
   function onPainted(index: number) {
     if (reduced) {
-      // Only the finished picture is ever shown (other stages are painted for the thumbnails below).
+      // Only the loop's last picture is ever shown (other stages are painted for the thumbnails below).
       if (index === LAST) show(LAST)
       return
     }
+    if (index > LAST) return // painted for a thumbnail, not part of the loop
     if (current < 0) {
       // The first stage to be ready is shown straight away.
       show(index)
       plan()
-    } else if (index === (current + 1) % DEMO_STAGES.length && !timer) {
+    } else if (index === (current + 1) % LOOP && !timer) {
       plan()
     }
   }
@@ -123,11 +125,13 @@ export function initHero(reduced: boolean): Hero {
   }
 
   if (reduced) {
-    // The finished picture only, no loop.
+    // The loop's last picture only, no loop.
     void stage(LAST).catch(() => {})
   } else {
     // Smallest first, so the picture shows almost at once; then the rest, one after another.
-    void DEMO_STAGES.reduce<Promise<unknown>>((chain, _, i) => chain.then(() => stage(i)), Promise.resolve()).catch(() => {})
+    void DEMO_STAGES.slice(0, LOOP)
+      .reduce<Promise<unknown>>((chain, _, i) => chain.then(() => stage(i)), Promise.resolve())
+      .catch(() => {})
     new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting
       if (onScreen) plan()

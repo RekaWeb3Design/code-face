@@ -16,8 +16,13 @@ You can keep the result as:
 - **a code poster**: that same text laid out as a print-ready poster (A4 to 50 x 70 cm, SVG, PNG or JPEG),
   optionally with every character coloured by the painting.
 
-<!-- Screenshots go in docs/ and must come from a landscape or product photo, never a person. -->
-_Screenshots: coming soon._
+<!-- Screenshots go in docs/: only from a photo with no person in it, with all metadata stripped
+     (npm run release-check enforces both the allowlist and the metadata rule). -->
+![The landing page: a windowsill photo being re-painted from blobs, with its live code beside it](docs/screenshot-landing.webp)
+
+| Growing: new blobs go where the picture is still most wrong | Done: 8,000 blobs, mistake 0.55% |
+| --- | --- |
+| ![The app adding blobs, each new one outlined](docs/screenshot-app-growing.webp) | ![The finished painting with its counters and code](docs/screenshot-app-done.webp) |
 
 ## Privacy
 
