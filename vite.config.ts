@@ -3,7 +3,8 @@ import {resolve} from 'node:path'
 import type {Connect} from 'vite'
 import {defineConfig} from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import {blobLines, chipData, fieldText, fillMarkers, panelItems} from './src/landing/demoHtml'
+import {DEMO_STAGES} from './src/landing/demo'
+import {anatomyHtml, blobLines, chipData, copyLinesHtml, fieldText, fillMarkers, mistakeChart, panelItems, spread} from './src/landing/demoHtml'
 
 // Two pages: "/" is the static landing (no app bundle, no WebGPU code), "/app/" is the app.
 // Cloudflare Pages serves /app as /app/ on its own; the dev and preview servers get the same here.
@@ -18,12 +19,17 @@ const appWithoutSlash: Connect.NextHandleFunction = (request, response, next) =>
 // The landing's code lines come from the real demo files (public/demo/) and are written into its HTML at
 // build time, so they are on the page before any script runs.
 const demoLines = (name: string) => blobLines(readFileSync(resolve(import.meta.dirname, 'public/demo', name), 'utf8'))
+// The line taken apart in "The code": a mid-sized, clearly coloured blob of the finished demo.
+const ANATOMY_BLOB = 1062 // "afdd 4469 88f 6d1 404 d9a07b ae", near the sun
 function landingMarkers(): Record<string, string> {
   const final = demoLines('stage-08000.txt')
   return {
     panel: panelItems(final, 14),
     field: fieldText(final, 56, 7),
     chips: chipData(final, 12),
+    anatomy: anatomyHtml(final, ANATOMY_BLOB),
+    'code-lines': copyLinesHtml(final, spread(final.length, 12)),
+    'mistake-chart': mistakeChart(DEMO_STAGES),
   }
 }
 

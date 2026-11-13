@@ -316,7 +316,7 @@ export function initCursors(chips: readonly Chip[], count: number): void {
         else start(section, now)
       }
     },
-    {rootMargin: '0px 0px -12% 0px', threshold: 0},
+    {rootMargin: '0px 0px -30% 0px', threshold: 0},
   )
   for (const section of sections) if (section.state === 'idle') observer.observe(section.el)
 }

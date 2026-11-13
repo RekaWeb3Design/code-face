@@ -91,7 +91,124 @@
         </div>
         <p class="scroll-hint wrap"><span class="hint-text">SCROLL · THE CURSORS BUILD THE REST</span> <svg viewBox="0 0 10 12" aria-hidden="true" focusable="false"><path d="M5 0v10M1 6.5 5 10.5 9 6.5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg></p>
       </section>
+      <section id="how" class="section" data-build-section aria-labelledby="how-title">
+        <div class="wrap">
+          <header class="section-head" data-build>
+            <p class="kicker">01 · HOW IT WORKS</p>
+            <h2 id="how-title">Three steps, all on your machine.</h2>
+          </header>
+          <ol class="cards">
+            <li class="card" data-build>
+              <div class="viz viz-drop" aria-hidden="true">
+                <canvas class="thumb" data-thumb="4"></canvas>
+                <span class="drop-label">your-photo.jpg</span>
+              </div>
+              <h3><span class="num">1</span>Drop a photo</h3>
+              <p>Pick a photo. Your browser reads it and shrinks it to 512 pixels; it never leaves this device.</p>
+            </li>
+            <li class="card" data-build>
+              <div class="viz viz-stages" aria-hidden="true">
+                <span><canvas class="thumb" data-thumb="0"></canvas><i>32</i></span>
+                <span><canvas class="thumb" data-thumb="1"></canvas><i>128</i></span>
+                <span><canvas class="thumb" data-thumb="2"></canvas><i>512</i></span>
+                <span><canvas class="thumb" data-thumb="3"></canvas><i>2,048</i></span>
+                <span><canvas class="thumb" data-thumb="4"></canvas><i>8,000</i></span>
+              </div>
+              <h3><span class="num">2</span>32 blobs become 8,000</h3>
+              <p>It starts with 32 big blobs and keeps adding smaller ones where the picture is still most wrong.</p>
+            </li>
+            <li class="card" data-build>
+              <div class="viz viz-chart" aria-hidden="true"><!--demo:mistake-chart--></div>
+              <h3><span class="num">3</span>Gradient descent</h3>
+              <p>Every step nudges each blob's place, size, angle, colour and opacity to make the mistake smaller.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="code" class="section" data-build-section aria-labelledby="code-title">
+        <div class="wrap">
+          <header class="section-head" data-build>
+            <p class="kicker">02 · THE CODE</p>
+            <h2 id="code-title">Your picture is a list of code.</h2>
+            <p class="section-lede">Every blob is one line of hex. The text file is the picture: open it in the app and it paints itself again.</p>
+          </header>
+          <div class="code-grid">
+            <div class="anatomy" data-build>
+<!--demo:anatomy-->
+            </div>
+            <div class="lines-block" data-build>
+              <p class="lines-head"><span>stage-08000.txt</span><span>12 of 8,000 lines · select one to copy it</span></p>
+              <ol class="copy-lines">
+<!--demo:code-lines-->
+              </ol>
+              <p class="copy-status" role="status" aria-live="polite"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="poster" class="section" data-build-section aria-labelledby="poster-title">
+        <div class="wrap poster-grid">
+          <figure class="poster-figure" data-build>
+            <img class="poster-img" src="/poster/demo-poster-1200.webp" srcset="/poster/demo-poster-720.webp 720w, /poster/demo-poster-1200.webp 1200w" sizes="(max-width: 860px) 100vw, 60vw" width="1200" height="848" loading="lazy" decoding="async" alt="An A4 landscape poster on a dark background: thousands of tiny lines of code, coloured by the demo landscape, so the sun, the mountains and the lake show through the text." />
+            <img class="poster-detail" src="/poster/demo-poster-detail.webp" width="480" height="300" loading="lazy" decoding="async" alt="A detail of the same poster at print size: rows of hex code, each character tinted by the picture behind it." />
+            <figcaption>The demo's 8,000 lines as an A4 poster, made with the app's own poster export; the inset is a detail at print resolution.</figcaption>
+          </figure>
+          <div class="poster-copy">
+            <header class="section-head" data-build>
+              <p class="kicker">03 · THE POSTER</p>
+              <h2 id="poster-title">Print the code.</h2>
+            </header>
+            <div data-build>
+              <p>The poster is the whole code file, every blob line, tinted by your picture so the picture shows through the text.</p>
+              <p>Download it as vector SVG that stays sharp at any size, or as a 300 dpi PNG, from A4 up to 50 × 70 cm.</p>
+              <p><a class="btn btn-outline" href="/app/">Make one <span class="arrow" aria-hidden="true">→</span></a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="honest" class="section" data-build-section aria-labelledby="honest-title">
+        <div class="wrap">
+          <header class="section-head" data-build>
+            <p class="kicker">04 · HONEST AND PRIVATE</p>
+            <h2 id="honest-title">Nothing generated. Nothing sent.</h2>
+          </header>
+          <ul class="facts">
+            <li data-build>
+              <h3>No AI generation</h3>
+              <p>Nothing is invented. Every blob is fitted to your own photo by plain gradient descent: re-painted, not generated.</p>
+            </li>
+            <li data-build>
+              <h3>Your photo stays here</h3>
+              <p>It is read, fitted and drawn in this browser tab, on your own GPU. The site has no backend that could receive it.</p>
+            </li>
+            <li data-build>
+              <h3>No analytics, no tracking</h3>
+              <p>No analytics, no cookies, no tracking scripts. Nothing on this site is loaded from another site.</p>
+            </li>
+            <li data-build>
+              <h3>Open source, MIT</h3>
+              <p>Every line is on <a href="https://github.com/RekaWeb3Design/code-face">GitHub</a> under the MIT licence: read it, run it, change it.</p>
+            </li>
+          </ul>
+        </div>
+      </section>
     </main>
+
+    <footer class="foot">
+      <div class="wrap foot-grid">
+        <p class="wordmark foot-mark" aria-hidden="true">CODE <span class="wm-b">FACE</span></p>
+        <ul class="foot-links">
+          <li><a href="https://github.com/RekaWeb3Design/code-face">GitHub</a></li>
+          <li><a href="https://github.com/RekaWeb3Design/code-face/blob/main/LICENSE">MIT licence</a></li>
+          <li>Fonts: JetBrains Mono (<a href="/licenses/JetBrainsMono-OFL.txt">OFL</a>) and Space Grotesk (<a href="/licenses/SpaceGrotesk-OFL.txt">OFL</a>)</li>
+        </ul>
+        <p class="foot-note">The idea came from an Instagram reel by heysirio.</p>
+        <p class="foot-note">Made by Réka Víg · <a href="https://rekavig.com">https://rekavig.com</a> · <a href="mailto:hello@rekavig.com">hello@rekavig.com</a></p>
+      </div>
+    </footer>
     <template id="cursor-chips"><!--demo:chips--></template>
   </body>
 </html>

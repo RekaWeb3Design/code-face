@@ -69,3 +69,67 @@ export function chipData(lines: readonly string[], count: number): string {
     .map((index) => `<i data-blob="${index}" data-colour="${lineColour(lines[index])}"></i>`)
     .join('')
 }
+
+// Section 02: one real line taken apart, field by field, with what each field means.
+export function anatomyHtml(lines: readonly string[], index: number): string {
+  const line = lines[index]
+  const names = ['x', 'y', 'w', 'h', 'ang', 'colour', 'op']
+  const fields = line
+    .split(' ')
+    .map(
+      (value, k) =>
+        `<span class="fld f-${names[k]}"><code>${value}</code>${k === 5 ? swatch(value) : ''}<span class="fname">${names[k]}</span></span>`,
+    )
+    .join('')
+  return [
+    `<p class="anatomy-head">One line is one blob. This is blob ${index + 1} of the demo:</p>`,
+    `<p class="ruler">${fields}</p>`,
+    `<dl class="legend">`,
+    `<div><dt>x y</dt><dd>where its centre sits, as a fraction of the picture's long side</dd></div>`,
+    `<div><dt>w h</dt><dd>its size along its own two axes, on a log scale</dd></div>`,
+    `<div><dt>ang</dt><dd>which way it is turned, 0 to 180 degrees</dd></div>`,
+    `<div><dt>colour</dt><dd>red, green and blue, two hex digits each</dd></div>`,
+    `<div><dt>op</dt><dd>how opaque it is, from 00 to ff</dd></div>`,
+    `</dl>`,
+  ].join('\n')
+}
+
+// Section 02: real lines to copy, one button each.
+export function copyLinesHtml(lines: readonly string[], indices: readonly number[]): string {
+  return indices
+    .map((index) => {
+      const line = lines[index]
+      return (
+        `<li><button type="button" class="copy-line" data-blob="${index}" data-line="${line}" ` +
+        `aria-label="Copy the line of blob ${index + 1}: ${line}"><span class="ln">${blobNumber(index)}</span>` +
+        `<code>${line}</code>${swatch(lineColour(line))}<span class="copied" aria-hidden="true">copied</span></button></li>`
+      )
+    })
+    .join('\n')
+}
+
+// Section 01, card 3: the measured mistake of each demo stage against its blob count, both on log scales.
+export function mistakeChart(stages: readonly {blobs: number; mistake: number}[]): string {
+  const [x0, x1, y0, y1] = [26, 226, 18, 84]
+  const lx = stages.map((s) => Math.log2(s.blobs))
+  const ly = stages.map((s) => Math.log10(s.mistake))
+  const [ax, bx] = [Math.min(...lx), Math.max(...lx)]
+  const [ay, by] = [Math.max(...ly), Math.min(...ly)]
+  const px = (v: number) => (x0 + ((v - ax) / (bx - ax)) * (x1 - x0)).toFixed(1)
+  const py = (v: number) => (y0 + ((v - ay) / (by - ay)) * (y1 - y0)).toFixed(1)
+  const points = stages.map((_, k) => `${px(lx[k])},${py(ly[k])}`)
+  const pct = (m: number) => `${(m * 100).toFixed(2)}%`
+  const first = stages[0]
+  const last = stages[stages.length - 1]
+  return [
+    `<svg class="chart" viewBox="0 0 240 120" focusable="false">`,
+    `<line class="axis" x1="${x0}" y1="100" x2="${x1}" y2="100"/>`,
+    `<polyline class="curve" points="${points.join(' ')}"/>`,
+    ...points.map((p) => `<circle class="dot" cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="3"/>`),
+    `<text class="lbl" x="${x0}" y="114">${first.blobs} blobs</text>`,
+    `<text class="lbl" x="${x1}" y="114" text-anchor="end">${last.blobs.toLocaleString('en-US')}</text>`,
+    `<text class="lbl val" x="${px(lx[0])}" y="${Number(py(ly[0])) - 8}">${pct(first.mistake)}</text>`,
+    `<text class="lbl val" x="${Number(px(lx[lx.length - 1])) - 8}" y="${Number(py(ly[ly.length - 1])) + 12}" text-anchor="end">${pct(last.mistake)}</text>`,
+    `</svg>`,
+  ].join('')
+}

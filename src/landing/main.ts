@@ -2,11 +2,13 @@
 // canvases from the real code files in /demo/.
 import {initCursors} from './cursors'
 import {initHero} from './hero'
+import {initSections} from './sections'
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
 document.documentElement.classList.toggle('reduced', reduced)
 
-initHero(reduced)
+const hero = initHero(reduced)
+initSections(hero)
 
 if (reduced) {
   // No cursors with reduced motion, so the hint does not promise them.

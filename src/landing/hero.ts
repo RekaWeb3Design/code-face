@@ -103,6 +103,11 @@ export function initHero(reduced: boolean): Hero {
   }
 
   function onPainted(index: number) {
+    if (reduced) {
+      // Only the finished picture is ever shown (other stages are painted for the thumbnails below).
+      if (index === LAST) show(LAST)
+      return
+    }
     if (current < 0) {
       // The first stage to be ready is shown straight away.
       show(index)
