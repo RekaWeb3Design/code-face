@@ -3,7 +3,7 @@ import {resolve} from 'node:path'
 import {describe, expect, it} from 'vitest'
 import {decodeBlobs} from '../code/blobCode'
 import {DEMO_ASPECT, DEMO_BACKGROUND, DEMO_STAGES, HERO_LAST} from './demo'
-import {blobLines, fieldText, fillMarkers, lineColour, panelItems, spread} from './demoHtml'
+import {blobLines, copyLinesHtml, fieldText, fillMarkers, lineColour, panelItems, spread} from './demoHtml'
 
 const root = resolve(import.meta.dirname, '../..')
 const read = (path: string) => readFileSync(resolve(root, path), 'utf8')
@@ -40,6 +40,13 @@ describe('landing HTML from the demo files', () => {
     const rows = fieldText(lines, 4, 3).split('\n')
     expect(rows).toHaveLength(4)
     for (const row of rows) for (const line of row.split('   ')) expect(lines).toContain(line)
+  })
+
+  it('puts the lines to copy in groups the build cursors carry, each line a real button', () => {
+    const html = copyLinesHtml(lines, [0, 1, 2, 3, 4, 5, 6], 3)
+    expect(html.match(/<ol class="copy-lines" data-build>/g)).toHaveLength(3)
+    expect(html.match(/<button type="button" class="copy-line"/g)).toHaveLength(7)
+    expect(html).toContain(`data-line="${lines[6]}"`)
   })
 
   it('spreads samples over the file', () => {

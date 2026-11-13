@@ -845,9 +845,13 @@ h3 {
   color: var(--text);
 }
 
+.copy-groups {
+  padding: 6px 0;
+}
+
 .copy-lines {
   margin: 0;
-  padding: 6px 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -1112,7 +1116,7 @@ h3 {
   }
 }
 
-/* Build cursors (cursors.ts). A fixed layer above the page that never takes the pointer. */
+/* Build relay (cursors.ts). A fixed layer above the page that never takes the pointer. */
 .cursors {
   position: fixed;
   inset: 0;
@@ -1126,39 +1130,61 @@ h3 {
   position: absolute;
   top: 0;
   left: 0;
-  width: 16px;
-  height: 20px;
-  opacity: 0;
-  will-change: transform, opacity;
+  width: 26px;
+  height: 32px;
+  will-change: transform;
 }
 
 .cursor .arrow {
   display: block;
-  width: 16px;
-  height: 20px;
+  width: 26px;
+  height: 32px;
   fill: var(--text);
   stroke: var(--bg);
-  stroke-width: 1.2;
+  stroke-width: 1.1;
   stroke-linejoin: round;
+  transform-origin: 2px 2px;
+  transition: transform 120ms ease-out;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.45));
+}
+
+/* Grabbing: the arrow closes in a touch. */
+.cursor.grab .arrow {
+  transform: scale(0.84);
 }
 
 .chip {
   position: absolute;
-  top: 15px;
-  left: 12px;
-  padding: 1px 5px;
+  top: 27px;
+  left: 18px;
+  padding: 1px 6px;
   border-radius: 3px;
-  font: 400 10px/1.45 var(--mono);
+  font: 400 11px/1.45 var(--mono);
   white-space: nowrap;
   box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3);
-  transition: opacity 200ms;
+  transition: transform 180ms ease-out;
 }
 
+/* On the right half of the screen the chip sits to the arrow's left: moved by transform, never by layout. */
 .cursor.flip .chip {
-  right: 10px;
-  left: auto;
+  transform: translateX(calc(-100% - 22px));
 }
 
-.cursor.no-chip .chip {
+/* Containers wait invisible until their slot comes within reach, then fade in. */
+[data-build-box] {
+  transition: opacity 320ms ease-out;
+}
+
+.box-wait {
   opacity: 0;
+}
+
+/* The element a cursor is holding: an outline in that cursor's colour (removed on the drop). */
+[data-build].held {
+  outline: 1.5px solid var(--grab, var(--accent));
+  outline-offset: 4px;
+}
+
+.foot {
+  overflow-x: clip; /* elements waiting at the screen's edges never make a horizontal scroll */
 }

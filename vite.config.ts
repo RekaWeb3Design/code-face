@@ -28,7 +28,7 @@ function landingMarkers(): Record<string, string> {
   return {
     panel: panelItems(loopEnd, 14),
     field: fieldText(final, 56, 7),
-    chips: chipData(final, 12),
+    chips: chipData(final, 20), // 12 cursors and 8 helpers
     anatomy: anatomyHtml(final, ANATOMY_BLOB),
     'code-lines': copyLinesHtml(final, spread(final.length, 12)),
     'mistake-chart': mistakeChart(DEMO_STAGES),

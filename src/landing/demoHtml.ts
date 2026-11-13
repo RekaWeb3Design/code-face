@@ -82,31 +82,36 @@ export function anatomyHtml(lines: readonly string[], index: number): string {
     )
     .join('')
   return [
-    `<p class="anatomy-head">One line is one blob. This is blob ${index + 1} of the demo:</p>`,
-    `<p class="ruler">${fields}</p>`,
+    `<p class="anatomy-head" data-build>One line is one blob. This is blob ${index + 1} of the demo:</p>`,
+    `<p class="ruler" data-build>${fields}</p>`,
     `<dl class="legend">`,
-    `<div><dt>x y</dt><dd>where its centre sits, as a fraction of the picture's long side</dd></div>`,
-    `<div><dt>w h</dt><dd>its size along its own two axes, on a log scale</dd></div>`,
-    `<div><dt>ang</dt><dd>which way it is turned, 0 to 180 degrees</dd></div>`,
-    `<div><dt>colour</dt><dd>red, green and blue, two hex digits each</dd></div>`,
-    `<div><dt>op</dt><dd>how opaque it is, from 00 to ff</dd></div>`,
+    `<div data-build><dt>x y</dt><dd>where its centre sits, as a fraction of the picture's long side</dd></div>`,
+    `<div data-build><dt>w h</dt><dd>its size along its own two axes, on a log scale</dd></div>`,
+    `<div data-build><dt>ang</dt><dd>which way it is turned, 0 to 180 degrees</dd></div>`,
+    `<div data-build><dt>colour</dt><dd>red, green and blue, two hex digits each</dd></div>`,
+    `<div data-build><dt>op</dt><dd>how opaque it is, from 00 to ff</dd></div>`,
     `</dl>`,
   ].join('\n')
 }
 
-// Section 02: real lines to copy, one button each.
-export function copyLinesHtml(lines: readonly string[], indices: readonly number[]): string {
-  return indices
-    .map((index) => {
-      const line = lines[index]
-      return (
-        // The accessible name is the visible text with "Copy the line of blob" in front (label in name).
-        `<li><button type="button" class="copy-line" data-blob="${index}" data-line="${line}">` +
-        `<span class="sr-only">Copy the line of blob </span><span class="ln">${blobNumber(index)}</span> ` +
-        `<code>${line}</code>${swatch(lineColour(line))}<span class="copied" aria-hidden="true">copied</span></button></li>`
-      )
-    })
-    .join('\n')
+// Section 02: real lines to copy, one button each, in groups of `perGroup` lines (each group is one piece the
+// build cursors carry).
+export function copyLinesHtml(lines: readonly string[], indices: readonly number[], perGroup = 3): string {
+  const item = (index: number) => {
+    const line = lines[index]
+    // The accessible name is the visible text with "Copy the line of blob" in front (label in name).
+    return (
+      `<li><button type="button" class="copy-line" data-blob="${index}" data-line="${line}">` +
+      `<span class="sr-only">Copy the line of blob </span><span class="ln">${blobNumber(index)}</span> ` +
+      `<code>${line}</code>${swatch(lineColour(line))}<span class="copied" aria-hidden="true">copied</span></button></li>`
+    )
+  }
+  const groups: string[] = []
+  for (let k = 0; k < indices.length; k += perGroup) {
+    const group = indices.slice(k, k + perGroup).map(item).join('\n')
+    groups.push(`<ol class="copy-lines" data-build>\n${group}\n</ol>`)
+  }
+  return groups.join('\n')
 }
 
 // Section 01, card 3: the measured mistake of each demo stage against its blob count, both on log scales.

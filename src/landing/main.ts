@@ -20,5 +20,6 @@ if (reduced) {
     colour: (el as HTMLElement).dataset.colour ?? '9299a3',
   }))
   const phone = matchMedia('(max-width: 640px)').matches
-  initCursors(chips, phone ? 4 : 12)
+  // The pool (12 on desktop, 4 on phones) and the helpers that join while jobs back up.
+  initCursors(chips, phone ? 4 : 12, phone ? 4 : 8)
 }

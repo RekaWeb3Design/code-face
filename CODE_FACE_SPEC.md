@@ -310,6 +310,18 @@ fonts keep OFL 1.1 and their licences are also served at `/licenses/`.
   done. Made 2026-11-13 from the owner's own photo of a windowsill (plants, a toy dinosaur, a small statue; no
   person), which is not committed (see `docs/landing-demo.md`). The hero's loop ends on 2,048 blobs: at 8,000
   (mistake 0.54%) the painting no longer looks painted.
+- **Landing build relay** (`src/landing/cursors.ts`): every element below the hero (labels, headings, paragraphs,
+  visuals, legend rows, code-line groups of 3, poster images, footer items: `[data-build]`) waits at the nearest
+  screen edge, turned 6-12 degrees at scale 0.94; card and box backgrounds (`[data-build-box]`) fade in first. At 80 %
+  of the viewport height an element joins one queue in document order; a pool of cursors (12 on desktop, 4 on
+  phones, plus up to 8 / 4 helpers from off-screen while jobs back up) grabs it at the edge (1.5 px outline in the
+  cursor's colour), carries it on a curve in 450-650 ms (450 while scrolling), overshoots 1.5 % and settles. Placed
+  instantly only if its slot leaves the view first or keyboard focus lands in it; never skipped for speed. Idle
+  cursors park in the side gutters (48-96 px in) only where the chip clears the text, else off-screen; in the hero
+  they drift and point at the picture or the panel. Transform/opacity only (chip flips by transform), CLS 0; no
+  cursors with reduced motion. `?debug-build` = 4x slower and logs every job; `?build-log` keeps
+  `window.__buildLog` at full speed. Measured 2026-11-13, steady wheel scroll at 1920: all 50 jobs animated, every
+  section assembled within 1.2-1.8 s of its first element queueing, frame p95 16.8-17.1 ms while building.
 - **Error states** (one line each, with a way forward):
   - photo: not an image file; a HEIC file the browser cannot decode; any other undecodable image; a file over
     40 MB (`src/ui/photoErrors.ts`, tested);
