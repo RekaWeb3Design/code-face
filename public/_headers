@@ -10,6 +10,12 @@
   X-Content-Type-Options: nosniff
   Cross-Origin-Opener-Policy: same-origin
 
+# The landing page: its own scripts (no inline scripts, no eval) and fetches of its demo code files
+# (/demo/*.txt) from this site. Everything else as strict as the rest.
+/
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
 # The app. blob: only for images: the loaded photo's thumbnail is an object URL.
 # worker-src: the poster is drawn in a Web Worker loaded from /assets/.
 /app/*

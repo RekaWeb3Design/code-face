@@ -332,11 +332,12 @@ fonts keep OFL 1.1 and their licences are also served at `/licenses/`.
 - **Hosting: Cloudflare Pages.** Build command `npm run build`, output directory `dist`, Node 22 (`.node-version`
   says 22.16.0; `engines` >= 22.12, which Vite 8 needs). No functions, no environment variables.
 - **Response headers** (`public/_headers`). Pages merges the headers of every matching rule, so the CSP is set on
-  `/*` and detached (`! Content-Security-Policy`) and replaced on `/app/*` and `/assets/*`; every response carries
+  `/*` and detached (`! Content-Security-Policy`) and replaced on `/`, `/app/*` and `/assets/*`; every response carries
   exactly one policy (checked with `wrangler pages dev`).
-  - static pages (landing, 404, licences, favicon): `default-src 'none'; style-src 'self'; font-src 'self';
-    img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`. When the real landing draws
-    the demo files it will need `script-src 'self'` and `connect-src 'self'` on `/`.
+  - static pages (404, licences, favicon): `default-src 'none'; style-src 'self'; font-src 'self';
+    img-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'`.
+  - landing `/`: the same plus `script-src 'self'` (its own module only; no inline scripts, no eval) and
+    `connect-src 'self'` (it fetches the demo code files from `/demo/`).
   - app and `/assets/*`: `default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self';
     font-src 'self'; img-src 'self' blob:; connect-src 'self'; base-uri 'none'; form-action 'none';
     frame-ancestors 'none'`. `blob:` only for images (the loaded photo's thumbnail); downloads are blob: links,
