@@ -58,3 +58,14 @@ export function fillMarkers(html: string, values: Record<string, string>): strin
     return values[name]
   })
 }
+
+// Data for the build cursors' chips: blob number and colour of real lines spread over the file, skipping
+// the darkest colours (a chip should stand out on the dark page).
+export function chipData(lines: readonly string[], count: number): string {
+  const bright = (index: number) => Math.max(...[0, 2, 4].map((k) => parseInt(lineColour(lines[index]).slice(k, k + 2), 16))) >= 0x60
+  const candidates = spread(lines.length, count * 6).filter(bright)
+  return spread(candidates.length, count)
+    .map((k) => candidates[k])
+    .map((index) => `<i data-blob="${index}" data-colour="${lineColour(lines[index])}"></i>`)
+    .join('')
+}

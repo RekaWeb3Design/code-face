@@ -648,3 +648,54 @@ figcaption {
     transition: none;
   }
 }
+
+/* Build cursors (cursors.ts). A fixed layer above the page that never takes the pointer. */
+.cursors {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 20px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.cursor .arrow {
+  display: block;
+  width: 16px;
+  height: 20px;
+  fill: var(--text);
+  stroke: var(--bg);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+}
+
+.chip {
+  position: absolute;
+  top: 15px;
+  left: 12px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font: 400 10px/1.45 var(--mono);
+  white-space: nowrap;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.3);
+  transition: opacity 200ms;
+}
+
+.cursor.flip .chip {
+  right: 10px;
+  left: auto;
+}
+
+.cursor.no-chip .chip {
+  opacity: 0;
+}

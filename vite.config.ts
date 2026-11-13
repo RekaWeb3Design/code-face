@@ -3,7 +3,7 @@ import {resolve} from 'node:path'
 import type {Connect} from 'vite'
 import {defineConfig} from 'vitest/config'
 import react from '@vitejs/plugin-react'
-import {blobLines, fieldText, fillMarkers, panelItems} from './src/landing/demoHtml'
+import {blobLines, chipData, fieldText, fillMarkers, panelItems} from './src/landing/demoHtml'
 
 // Two pages: "/" is the static landing (no app bundle, no WebGPU code), "/app/" is the app.
 // Cloudflare Pages serves /app as /app/ on its own; the dev and preview servers get the same here.
@@ -23,6 +23,7 @@ function landingMarkers(): Record<string, string> {
   return {
     panel: panelItems(final, 14),
     field: fieldText(final, 56, 7),
+    chips: chipData(final, 12),
   }
 }
 
