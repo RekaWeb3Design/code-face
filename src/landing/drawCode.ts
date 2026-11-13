@@ -17,6 +17,20 @@ export function pictureSize(aspect: readonly [number, number], longSide: number)
 
 // RGBA bytes (opaque) of the decoded blobs at width x height.
 export function renderBlobs(picture: DecodedPicture, width: number, height: number): Uint8ClampedArray<ArrayBuffer> {
+  const steps = renderBlobsInSteps(picture, width, height)
+  for (;;) {
+    const next = steps.next()
+    if (next.done) return next.value
+  }
+}
+
+// The same picture, made in small steps: it yields after every blob and after every row of the final
+// pass, so the landing can spread the work over frames and never hold up scrolling.
+export function* renderBlobsInSteps(
+  picture: DecodedPicture,
+  width: number,
+  height: number,
+): Generator<void, Uint8ClampedArray<ArrayBuffer>, void> {
   const {params, count, bg} = picture
   const longSide = Math.max(width, height)
   const sumWC = new Float64Array(width * height * 3)
@@ -45,11 +59,15 @@ export function renderBlobs(picture: DecodedPicture, width: number, height: numb
         sumWC[k * 3 + 2] += w * blob.b
       }
     }
+    yield
   }
   const rgba = new Uint8ClampedArray(width * height * 4)
-  for (let k = 0; k < width * height; k++) {
-    for (let ch = 0; ch < 3; ch++) rgba[k * 4 + ch] = Math.round(resolveColor(sumWC[k * 3 + ch], sumW[k], bg[ch], EPS) * 255)
-    rgba[k * 4 + 3] = 255
+  for (let py = 0; py < height; py++) {
+    for (let k = py * width; k < (py + 1) * width; k++) {
+      for (let ch = 0; ch < 3; ch++) rgba[k * 4 + ch] = Math.round(resolveColor(sumWC[k * 3 + ch], sumW[k], bg[ch], EPS) * 255)
+      rgba[k * 4 + 3] = 255
+    }
+    yield
   }
   return rgba
 }

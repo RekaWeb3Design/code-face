@@ -14,13 +14,83 @@
     <meta property="og:description" content="Re-paint a photo from thousands of soft colour blobs, fitted live on your own GPU in the browser, and keep it as a text file that is the picture. Nothing is uploaded." />
     <meta property="og:url" content="https://codeface.rekavig.com/" />
     <link rel="stylesheet" href="/src/landing/landing.css" />
+    <script type="module" src="/src/landing/main.ts"></script>
   </head>
   <body>
-    <main class="landing">
-      <h1 class="wordmark">CODE FACE</h1>
-      <p>Your photo, re-painted in your browser from thousands of soft colour blobs, and written down as a text file that is the picture.</p>
-      <p><a class="open" href="/app/">Open the app</a></p>
-      <p class="small">Open source (MIT): <a href="https://github.com/RekaWeb3Design/code-face">github.com/RekaWeb3Design/code-face</a></p>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="top">
+      <div class="wrap top-row">
+        <a class="wordmark" href="/" aria-label="Code Face, home"><span aria-hidden="true"><span class="wm-a">CODE</span> <span class="wm-b">FACE</span></span></a>
+        <nav class="nav" aria-label="Page">
+          <a href="#how">How it works</a>
+          <a href="#code">The code</a>
+          <a href="#poster">Poster</a>
+          <a href="https://github.com/RekaWeb3Design/code-face">GitHub</a>
+        </nav>
+        <a class="btn btn-accent btn-small" href="/app/">Open the app</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="field" aria-hidden="true"><pre class="field-text"><!--demo:field--></pre></div>
+        <div class="wrap hero-grid">
+          <div class="hero-copy">
+            <p class="term"><span class="prompt" aria-hidden="true">$</span> codeface paint ./your-photo.jpg --blobs 8000<span class="caret" aria-hidden="true"></span></p>
+            <h1 id="hero-title">
+              <span class="h1-main">Your photo, <span class="nb">re-painted</span></span>
+              <span class="h1-mono"><span class="sr-only">blob by blob.</span><span class="decode" aria-hidden="true">blob by blob.</span></span>
+            </h1>
+            <p class="lede">
+              Thousands of soft colour blobs, fitted live by gradient descent on your own GPU. Nothing is uploaded. When it
+              is done, your picture is a list of code you can print.
+            </p>
+            <p class="actions">
+              <a class="btn btn-accent" href="/app/">Paint my photo <span class="arrow" aria-hidden="true">→</span></a>
+              <a class="btn btn-outline" href="#how">How it works</a>
+            </p>
+            <dl class="counters">
+              <div>
+                <dt>BLOBS · LIVE</dt>
+                <dd id="count-blobs">8,000</dd>
+              </div>
+              <div>
+                <dt>MISTAKE</dt>
+                <dd id="count-mistake">0.05%</dd>
+              </div>
+              <div>
+                <dt>UPLOADED</dt>
+                <dd>0 bytes</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="demo">
+            <figure class="picture">
+              <div class="frame">
+                <canvas data-stage="0" aria-hidden="true"></canvas>
+                <canvas data-stage="1" aria-hidden="true"></canvas>
+                <canvas data-stage="2" aria-hidden="true"></canvas>
+                <canvas data-stage="3" aria-hidden="true"></canvas>
+                <canvas data-stage="4" aria-hidden="true"></canvas>
+                <svg class="outline" viewBox="0 0 1 0.666015625" preserveAspectRatio="none" aria-hidden="true" focusable="false"><ellipse class="ring" cx="0" cy="0" rx="0" ry="0" /></svg>
+                <span class="tag" aria-hidden="true"></span>
+              </div>
+              <aside class="panel" aria-label="The demo picture's code, a few lines of it">
+                <p class="panel-head"><span class="live-dot" aria-hidden="true"></span>LIVE · BLOB CODE<span class="panel-count">8,000 blobs</span></p>
+                <ol class="panel-lines">
+<!--demo:panel-->
+                </ol>
+              </aside>
+              <figcaption>
+                Demo: a landscape drawn by a script (no photo), re-painted by Code Face from 32 to 8,000 blobs. Each stage
+                is drawn here from its real code file.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        <p class="scroll-hint wrap">SCROLL · THE CURSORS BUILD THE REST <svg viewBox="0 0 10 12" aria-hidden="true" focusable="false"><path d="M5 0v10M1 6.5 5 10.5 9 6.5" fill="none" stroke="currentColor" stroke-width="1.4" /></svg></p>
+      </section>
     </main>
   </body>
 </html>

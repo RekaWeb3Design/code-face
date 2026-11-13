@@ -3,7 +3,7 @@ import {decodeBlobs, encodeBlobs} from '../code/blobCode'
 import {EPS, P, Q_MAX, THETA, X, Y} from '../fitter/params'
 import {prng} from '../fitter/prng'
 import {forward} from '../reference/render'
-import {pictureSize, renderBlobs} from './drawCode'
+import {pictureSize, renderBlobs, renderBlobsInSteps} from './drawCode'
 
 // A code file of random blobs, some rotated, some reaching over the picture's edges.
 function randomCode(count: number, seed: number, width: number, height: number): string {
@@ -53,5 +53,19 @@ describe('landing renderer', () => {
     const text = encodeBlobs({params: new Float32Array(0), count: 0, seed: 1, width: 4, height: 3, bg: [1, 0, 0.5]})
     const rgba = renderBlobs(decodeBlobs(text), 4, 3)
     expect(Array.from(rgba.subarray(0, 4))).toEqual([255, 0, 128, 255])
+  })
+
+  it('yields once per blob and once per row, and gives the same bytes in steps', () => {
+    const text = randomCode(25, 4, 30, 20)
+    const picture = decodeBlobs(text)
+    const steps = renderBlobsInSteps(picture, 30, 20)
+    let yields = 0
+    let next = steps.next()
+    while (!next.done) {
+      yields++
+      next = steps.next()
+    }
+    expect(yields).toBe(25 + 20)
+    expect(Array.from(next.value)).toEqual(Array.from(referenceBytes(text, 30, 20)))
   })
 })
